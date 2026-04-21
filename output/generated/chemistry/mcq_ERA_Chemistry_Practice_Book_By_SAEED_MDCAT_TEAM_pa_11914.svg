@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="250" viewBox="0 0 400 250">
+<rect width="400" height="250" fill="white"/>
+<line x1="249.5" y1="62.2" x2="273.2" y2="92.3" stroke="#000000" stroke-width="2"/>
+<line x1="273.2" y1="92.3" x2="253.3" y2="142.3" stroke="#000000" stroke-width="2"/>
+<line x1="253.3" y1="142.3" x2="277.0" y2="172.4" stroke="#000000" stroke-width="2"/>
+<line x1="253.3" y1="142.3" x2="200.0" y2="150.0" stroke="#000000" stroke-width="2"/>
+<line x1="200.0" y1="150.0" x2="166.7" y2="107.7" stroke="#000000" stroke-width="2"/>
+<line x1="166.7" y1="107.7" x2="128.7" y2="113.2" stroke="#000000" stroke-width="2"/>
+<line x1="200.0" y1="150.0" x2="185.8" y2="185.6" stroke="#000000" stroke-width="2"/>
+<text x="239.9" y="54.7" text-anchor="middle" style="font-family: Arial, sans-serif; font-size: 14px; fill: #000000;">CH<tspan style="font-size: 9px;">₃</tspan></text>
+<text x="286.6" y="189.2" text-anchor="middle" style="font-family: Arial, sans-serif; font-size: 14px; fill: #000000;">CH<tspan style="font-size: 9px;">₃</tspan></text>
+<text x="113.4" y="120.1" text-anchor="middle" style="font-family: Arial, sans-serif; font-size: 14px; fill: #000000;">CH<tspan style="font-size: 9px;">₃</tspan></text>
+<text x="180.0" y="204.7" text-anchor="middle" style="font-family: Arial, sans-serif; font-size: 14px; fill: #000000;">CH<tspan style="font-size: 9px;">₃</tspan></text>
+</svg>

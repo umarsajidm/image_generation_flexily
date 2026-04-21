@@ -2,19 +2,21 @@
 Reference-based SVG generator using Gemini Vision.
 """
 import os
-import base64
-from typing import Optional, Tuple, Dict, Any
+from typing import Optional, Tuple
 from pathlib import Path
-import google.generativeai as genai
-from config.settings import GEMINI_MODEL, GCP_PROJECT_ID
+import vertexai
+from vertexai.generative_models import GenerativeModel, Part
+from config.settings import GEMINI_MODEL, GCP_PROJECT_ID, GCP_LOCATION
 from config.prompts import REFERENCE_PROMPT
+
+vertexai.init(project=GCP_PROJECT_ID, location=GCP_LOCATION)
 
 
 class ReferenceGenerator:
     """Generate SVG diagrams based on reference images from textbooks."""
     
     def __init__(self):
-        self.model = genai.GenerativeModel(GEMINI_MODEL)
+        self.model = GenerativeModel(GEMINI_MODEL)
         self.textbook_images_dir = Path("/root/organized_data/textbooks/images")
     
     def generate_from_reference(
@@ -37,38 +39,28 @@ class ReferenceGenerator:
             Tuple of (svg_string, error_message)
         """
         try:
-            # Load reference image
             ref_path = self._resolve_image_path(reference_image_path)
             if not ref_path or not ref_path.exists():
                 return None, f"Reference image not found: {reference_image_path}"
             
-            # Read and encode image
             with open(ref_path, 'rb') as f:
                 image_data = f.read()
             
-            # Create prompt
             prompt = REFERENCE_PROMPT.format(
                 question_text=question_text,
                 subject=subject,
                 chapter=chapter
             )
             
-            # Generate with Gemini Vision
-            response = self.model.generate_content([
-                {"text": prompt},
-                {
-                    "inline_data": {
-                        "mime_type": "image/png",
-                        "data": base64.b64encode(image_data).decode()
-                    }
-                }
-            ])
+            image_part = Part.from_data(image_data, mime_type="image/png")
             
-            # Extract SVG from response
-            svg = self._extract_svg(response.text)
+            response = self.model.generate_content([prompt, image_part])
+            
+            response_text = response.text
+            
+            svg = self._extract_svg(response_text)
             
             if svg:
-                # Validate and optimize
                 svg = self._optimize_svg(svg)
                 is_valid, issues = self._validate_svg(svg)
                 if not is_valid:
@@ -82,16 +74,13 @@ class ReferenceGenerator:
     
     def _resolve_image_path(self, image_path: str) -> Optional[Path]:
         """Resolve image path to actual file location."""
-        # Handle different path formats
         if image_path.startswith('/'):
             return Path(image_path)
         
-        # Check in textbook images directory
         full_path = self.textbook_images_dir / image_path
         if full_path.exists():
             return full_path
         
-        # Try with just the filename
         filename = os.path.basename(image_path)
         full_path = self.textbook_images_dir / filename
         if full_path.exists():
@@ -101,28 +90,23 @@ class ReferenceGenerator:
     
     def _extract_svg(self, response_text: str) -> Optional[str]:
         """Extract SVG code from model response."""
-        # Remove markdown code blocks if present
         text = response_text.strip()
         
-        # Handle ```svg ... ``` blocks
         if '```svg' in text:
             start = text.find('```svg') + 6
             end = text.find('```', start)
             if end > start:
                 return text[start:end].strip()
         
-        # Handle ``` ... ``` blocks
         if '```' in text:
             start = text.find('```') + 3
             end = text.find('```', start)
             if end > start:
                 return text[start:end].strip()
         
-        # Check if response is directly SVG
         if text.startswith('<svg'):
             return text
         
-        # Try to find SVG tag in response
         start = text.find('<svg')
         end = text.find('</svg>') + 6
         if start >= 0 and end > start:
@@ -132,11 +116,9 @@ class ReferenceGenerator:
     
     def _optimize_svg(self, svg: str) -> str:
         """Optimize SVG for web display."""
-        # Ensure proper viewBox
         if 'viewBox' not in svg:
             svg = svg.replace('<svg', '<svg viewBox="0 0 400 250"')
         
-        # Ensure xmlns
         if 'xmlns' not in svg:
             svg = svg.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"')
         
@@ -151,14 +133,5 @@ class ReferenceGenerator:
         
         if len(svg) > 15000:
             issues.append(f"SVG too large: {len(svg)} bytes")
-        
-        # Check for reasonable dimensions in viewBox
-        import re
-        viewBox_match = re.search(r'viewBox="(\d+)\s+(\d+)\s+(\d+)\s+(\d+)"', svg)
-        if viewBox_match:
-            width = int(viewBox_match.group(3))
-            height = int(viewBox_match.group(4))
-            if width > 500 or height > 350:
-                issues.append(f"Dimensions too large: {width}x{height}")
         
         return len(issues) == 0, issues

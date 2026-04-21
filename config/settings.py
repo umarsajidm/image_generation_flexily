@@ -21,7 +21,7 @@ DATABASE_URL = os.getenv(
 # GCP Configuration
 GCP_PROJECT_ID = os.getenv("GCP_PROJECT_ID", "flexily-data-processing")
 GCP_LOCATION = os.getenv("GCP_LOCATION", "europe-north1")
-GEMINI_MODEL = "gemini-1.5-flash"
+GEMINI_MODEL = "gemini-2.5-flash"
 
 # Batch Processing
 BATCH_SIZE = 50

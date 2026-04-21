@@ -2,8 +2,9 @@
 Vector matcher for finding similar textbook content with images.
 """
 from typing import List, Dict, Any, Optional
-import google.generativeai as genai
-from config.settings import GEMINI_MODEL, SIMILARITY_THRESHOLD_HIGH, SIMILARITY_THRESHOLD_LOW
+from google import genai
+from google.genai import types
+from config.settings import GEMINI_MODEL, GCP_PROJECT_ID, GCP_LOCATION, SIMILARITY_THRESHOLD_HIGH, SIMILARITY_THRESHOLD_LOW
 from src.database.connection import get_textbook_chunks_with_images
 
 
@@ -11,7 +12,7 @@ class VectorMatcher:
     """Match MCQs to textbook content with images using vector similarity."""
     
     def __init__(self):
-        self.model = genai.GenerativeModel(GEMINI_MODEL)
+        self.client = genai.Client(vertexai=True, project=GCP_PROJECT_ID, location=GCP_LOCATION)
     
     async def find_reference(
         self,
@@ -29,10 +30,8 @@ class VectorMatcher:
             Match result with image path and similarity score, or None
         """
         try:
-            # Generate embedding for question
             embedding = await self._generate_embedding(question_text)
             
-            # Search textbook chunks with images
             results = await get_textbook_chunks_with_images(
                 query_embedding=embedding,
                 subject=subject,
@@ -43,10 +42,8 @@ class VectorMatcher:
             if not results:
                 return None
             
-            # Get best match
             best_match = results[0]
             
-            # Get image path
             if best_match.get('image_paths'):
                 image_path = best_match['image_paths'][0]
             else:
@@ -67,14 +64,8 @@ class VectorMatcher:
     
     async def _generate_embedding(self, text: str) -> List[float]:
         """Generate embedding using Gemini."""
-        # Use embedding model
         try:
-            from google import genai as genai_client
-            from google.genai import types
-            
-            client = genai_client.Client()
-            
-            result = await client.aio.models.embed_content(
+            result = await self.client.aio.models.embed_content(
                 model="text-embedding-004",
                 contents=[text],
                 config=types.EmbedContentConfig(
@@ -87,7 +78,6 @@ class VectorMatcher:
             
         except Exception as e:
             print(f"Embedding error: {e}")
-            # Return empty embedding as fallback
             return [0.0] * 768
     
     def _get_confidence(self, similarity: float) -> str:

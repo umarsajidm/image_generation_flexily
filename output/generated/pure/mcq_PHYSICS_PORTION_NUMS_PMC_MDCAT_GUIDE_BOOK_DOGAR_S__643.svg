@@ -1,0 +1,43 @@
+<svg viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="black" />
+    </marker>
+  </defs>
+
+  <!-- Current Source Symbol (circle with arrow inside) -->
+  <circle cx="80" cy="125" r="30" stroke="black" stroke-width="2" fill="none"/>
+  <line x1="65" y1="125" x2="95" y2="125" stroke="black" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Label for Is (Source Current) -->
+  <text x="100" y="115" font-family="Arial, sans-serif" font-size="20" fill="black">I</text>
+  <text x="110" y="123" font-family="Arial, sans-serif" font-size="14" fill="black">s</text>
+
+  <!-- Main wire from source to junction -->
+  <line x1="110" y1="125" x2="160" y2="125" stroke="black" stroke-width="2"/>
+
+  <!-- Junction point -->
+  <circle cx="160" cy="125" r="3" fill="black"/>
+
+  <!-- Top Branch -->
+  <line x1="160" y1="125" x2="160" y2="75" stroke="black" stroke-width="2"/>
+  <line x1="160" y1="75" x2="240" y2="75" stroke="black" stroke-width="2"/>
+  <!-- Top Component (generic rectangle) -->
+  <rect x="240" y="60" width="60" height="30" stroke="black" stroke-width="2" fill="none"/>
+  <line x1="300" y1="75" x2="350" y2="75" stroke="black" stroke-width="2"/>
+  <line x1="350" y1="75" x2="350" y2="125" stroke="black" stroke-width="2"/>
+
+  <!-- Bottom Branch -->
+  <line x1="160" y1="125" x2="160" y2="175" stroke="black" stroke-width="2"/>
+  <line x1="160" y1="175" x2="240" y2="175" stroke="black" stroke-width="2"/>
+  <!-- Bottom Component (generic rectangle) -->
+  <rect x="240" y="160" width="60" height="30" stroke="black" stroke-width="2" fill="none"/>
+  <line x1="300" y1="175" x2="350" y2="175" stroke="black" stroke-width="2"/>
+  <line x1="350" y1="175" x2="350" y2="125" stroke="black" stroke-width="2"/>
+
+  <!-- Arrow for Ic (Current in a component/branch) -->
+  <line x1="190" y1="175" x2="220" y2="175" stroke="black" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <!-- Label for Ic -->
+  <text x="195" y="160" font-family="Arial, sans-serif" font-size="20" fill="black">I</text>
+  <text x="205" y="168" font-family="Arial, sans-serif" font-size="14" fill="black">c</text>
+</svg>

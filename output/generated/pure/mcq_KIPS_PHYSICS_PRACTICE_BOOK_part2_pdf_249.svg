@@ -1,0 +1,68 @@
+<svg viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg">
+  <!-- Styles for consistency and readability -->
+  <style>
+    .axis {
+      stroke: black;
+      stroke-width: 1.5;
+      fill: none;
+    }
+    .wave {
+      stroke: black;
+      stroke-width: 2;
+      fill: none;
+    }
+    .label {
+      font-family: sans-serif;
+      font-size: 16px;
+      fill: black;
+    }
+    .tick-label {
+      font-family: sans-serif;
+      font-size: 14px;
+      fill: black;
+    }
+    .tick {
+      stroke: black;
+      stroke-width: 1;
+    }
+  </style>
+
+  <!-- Axes -->
+  <line x1="50" y1="225" x2="50" y2="25" class="axis" /> <!-- Y-axis -->
+  <line x1="50" y1="125" x2="380" y2="125" class="axis" /> <!-- X-axis (time) -->
+
+  <!-- Axis labels -->
+  <text x="30" y="35" text-anchor="middle" class="label">v (m/s)</text>
+  <text x="385" y="130" text-anchor="start" class="label">t (s)</text>
+  <text x="40" y="130" text-anchor="end" class="tick-label">0</text>
+
+  <!-- Time ticks and labels -->
+  <!-- 0.1s -->
+  <line x1="132.5" y1="120" x2="132.5" y2="130" class="tick" />
+  <text x="132.5" y="145" text-anchor="middle" class="tick-label">0.1</text>
+  <!-- 0.2s -->
+  <line x1="215" y1="120" x2="215" y2="130" class="tick" />
+  <text x="215" y="145" text-anchor="middle" class="tick-label">0.2</text>
+  <!-- 0.3s -->
+  <line x1="297.5" y1="120" x2="297.5" y2="130" class="tick" />
+  <text x="297.5" y="145" text-anchor="middle" class="tick-label">0.3</text>
+  <!-- 0.4s -->
+  <line x1="380" y1="120" x2="380" y2="130" class="tick" />
+  <text x="380" y="145" text-anchor="middle" class="tick-label">0.4</text>
+
+  <!-- Velocity-Time Wave (Harmonic Oscillator) -->
+  <!-- Key points:
+    (50, 125) -> t=0, v=0
+    (132.5, 75) -> t=0.1, v=max (relative y-coordinate: -50 from origin)
+    (215, 125) -> t=0.2, v=0
+    (297.5, 175) -> t=0.3, v=min (relative y-coordinate: +50 from origin)
+    (380, 125) -> t=0.4, v=0 (End of one full cycle)
+  -->
+  <path d="
+    M 50,125 
+    C 70, 95, 110, 75, 132.5, 75 
+    C 155, 75, 195, 95, 215, 125 
+    C 235, 155, 275, 175, 297.5, 175 
+    C 320, 175, 360, 155, 380, 125
+  " class="wave" />
+</svg>

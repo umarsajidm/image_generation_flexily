@@ -2,16 +2,19 @@
 Pure AI SVG generator without reference images.
 """
 from typing import Optional, Tuple
-import google.generativeai as genai
-from config.settings import GEMINI_MODEL
+import vertexai
+from vertexai.generative_models import GenerativeModel
+from config.settings import GEMINI_MODEL, GCP_PROJECT_ID, GCP_LOCATION
 from config.prompts import PURE_GENERATION_PROMPT, DIAGRAM_TYPE_KEYWORDS
+
+vertexai.init(project=GCP_PROJECT_ID, location=GCP_LOCATION)
 
 
 class PureGenerator:
     """Generate SVG diagrams purely from question text using AI."""
     
     def __init__(self):
-        self.model = genai.GenerativeModel(GEMINI_MODEL)
+        self.model = GenerativeModel(GEMINI_MODEL)
     
     def detect_diagram_type(self, question_text: str) -> str:
         """Detect what type of diagram the question needs."""
@@ -43,10 +46,8 @@ class PureGenerator:
             Tuple of (svg_string, error_message)
         """
         try:
-            # Detect diagram type
             diagram_type = self.detect_diagram_type(question_text)
             
-            # Create prompt
             prompt = PURE_GENERATION_PROMPT.format(
                 question_text=question_text,
                 subject=subject,
@@ -55,14 +56,13 @@ class PureGenerator:
                 context=context if context else "No additional context available."
             )
             
-            # Generate with Gemini
             response = self.model.generate_content(prompt)
             
-            # Extract SVG from response
-            svg = self._extract_svg(response.text)
+            response_text = response.text
+            
+            svg = self._extract_svg(response_text)
             
             if svg:
-                # Validate and optimize
                 svg = self._optimize_svg(svg)
                 is_valid, issues = self._validate_svg(svg)
                 if not is_valid:
@@ -78,25 +78,21 @@ class PureGenerator:
         """Extract SVG code from model response."""
         text = response_text.strip()
         
-        # Handle ```svg ... ``` blocks
         if '```svg' in text:
             start = text.find('```svg') + 6
             end = text.find('```', start)
             if end > start:
                 return text[start:end].strip()
         
-        # Handle ``` ... ``` blocks
         if '```' in text:
             start = text.find('```') + 3
             end = text.find('```', start)
             if end > start:
                 return text[start:end].strip()
         
-        # Check if response is directly SVG
         if text.startswith('<svg'):
             return text
         
-        # Try to find SVG tag
         start = text.find('<svg')
         end = text.find('</svg>') + 6
         if start >= 0 and end > start:

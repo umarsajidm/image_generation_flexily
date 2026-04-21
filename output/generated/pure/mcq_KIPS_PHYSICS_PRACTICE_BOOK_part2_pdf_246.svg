@@ -1,0 +1,38 @@
+<svg viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg">
+  <!-- Define arrow marker -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="black" />
+    </marker>
+  </defs>
+
+  <!-- Title/Context -->
+  <text x="200" y="30" font-family="Arial, sans-serif" font-size="16" fill="black" text-anchor="middle" font-weight="bold">Electromagnetic Spectrum</text>
+
+  <!-- Main spectrum bar outline -->
+  <rect x="30" y="80" width="340" height="40" fill="none" stroke="black" stroke-width="2"/>
+
+  <!-- Sections: Ultra-violet, Missing, Radio -->
+  <!-- Ultra-violet section and label -->
+  <line x1="120" y1="80" x2="120" y2="120" stroke="black" stroke-width="1"/>
+  <text x="75" y="105" font-family="Arial, sans-serif" font-size="14" fill="black" text-anchor="middle">Ultra-violet</text>
+
+  <!-- Missing section - highlighted and dashed border -->
+  <rect x="120" y="80" width="120" height="40" fill="#FFFAE6" stroke="red" stroke-width="2" stroke-dasharray="5,5"/>
+  <text x="180" y="105" font-family="Arial, sans-serif" font-size="14" fill="black" text-anchor="middle">MISSING</text>
+
+  <!-- Radio section and label -->
+  <line x1="240" y1="80" x2="240" y2="120" stroke="black" stroke-width="1"/>
+  <text x="305" y="105" font-family="Arial, sans-serif" font-size="14" fill="black" text-anchor="middle">Radio</text>
+
+  <!-- Contextual labels for frequency and wavelength trends -->
+  <text x="30" y="65" font-family="Arial, sans-serif" font-size="12" fill="black" text-anchor="start">← Short λ / High F</text>
+  <text x="370" y="65" font-family="Arial, sans-serif" font-size="12" fill="black" text-anchor="end">Long λ / Low F →</text>
+
+  <!-- Explanation of the missing section -->
+  <text x="200" y="150" font-family="Arial, sans-serif" font-size="14" fill="black" text-anchor="middle">The missing sequence is:</text>
+  <text x="200" y="175" font-family="Arial, sans-serif" font-size="16" fill="black" text-anchor="middle" font-weight="bold">Visible light, Infra-red, Microwaves</text>
+
+  <!-- Arrow pointing from the missing section to its explanation -->
+  <line x1="180" y1="120" x2="180" y2="140" stroke="black" stroke-width="1" marker-end="url(#arrowhead)"/>
+</svg>

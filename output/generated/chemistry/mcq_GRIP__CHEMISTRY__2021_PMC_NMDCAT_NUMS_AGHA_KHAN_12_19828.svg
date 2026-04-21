@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="250" viewBox="0 0 400 250">
+<rect width="400" height="250" fill="white"/>
+<line x1="64.9" y1="134.3" x2="101.5" y2="113.2" stroke="#000000" stroke-width="2"/>
+<line x1="61.9" y1="129.1" x2="98.5" y2="108.0" stroke="#000000" stroke-width="2"/>
+<line x1="100.0" y1="110.6" x2="150.0" y2="139.4" stroke="#000000" stroke-width="2"/>
+<line x1="150.0" y1="139.4" x2="200.0" y2="110.6" stroke="#000000" stroke-width="2"/>
+<line x1="200.0" y1="110.6" x2="250.0" y2="139.4" stroke="#000000" stroke-width="2"/>
+<line x1="251.5" y1="142.0" x2="301.5" y2="113.2" stroke="#000000" stroke-width="2"/>
+<line x1="248.5" y1="136.8" x2="298.5" y2="108.0" stroke="#000000" stroke-width="2"/>
+<line x1="300.0" y1="110.6" x2="336.6" y2="131.7" stroke="#000000" stroke-width="2"/>
+<text x="50.0" y="144.1" text-anchor="middle" style="font-family: Arial, sans-serif; font-size: 14px; fill: #000000;">CH<tspan style="font-size: 9px;">₂</tspan></text>
+<text x="350.0" y="144.1" text-anchor="middle" style="font-family: Arial, sans-serif; font-size: 14px; fill: #000000;">CH<tspan style="font-size: 9px;">₃</tspan></text>
+</svg>

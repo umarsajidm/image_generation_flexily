@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="250" viewBox="0 0 400 250">
+<rect width="400" height="250" fill="white"/>
+<line x1="63.8" y1="100.0" x2="101.3" y2="80.5" stroke="#000000" stroke-width="2"/>
+<line x1="101.3" y1="80.5" x2="142.8" y2="107.1" stroke="#000000" stroke-width="2"/>
+<line x1="146.6" y1="120.1" x2="144.7" y2="160.8" stroke="#000000" stroke-width="2"/>
+<line x1="152.6" y1="120.3" x2="150.7" y2="161.1" stroke="#000000" stroke-width="2"/>
+<line x1="157.5" y1="107.8" x2="193.8" y2="89.1" stroke="#000000" stroke-width="2"/>
+<line x1="208.5" y1="89.7" x2="236.9" y2="108.0" stroke="#000000" stroke-width="2"/>
+<line x1="263.8" y1="109.2" x2="301.3" y2="89.8" stroke="#000000" stroke-width="2"/>
+<line x1="301.3" y1="89.8" x2="336.9" y2="112.6" stroke="#000000" stroke-width="2"/>
+<text x="50.0" y="111.8" text-anchor="middle" style="font-family: Arial, sans-serif; font-size: 14px; fill: #000000;">CH<tspan style="font-size: 9px;">₃</tspan></text>
+<text x="150.0" y="116.4" text-anchor="middle" style="font-family: Arial, sans-serif; font-size: 14px; fill: #000000;">C</text>
+<text x="147.3" y="174.1" text-anchor="middle" style="font-family: Arial, sans-serif; font-size: 14px; fill: #000000;">O</text>
+<text x="201.3" y="89.8" text-anchor="middle" style="font-family: Arial, sans-serif; font-size: 14px; fill: #000000;">O</text>
+<text x="250.0" y="121.0" text-anchor="middle" style="font-family: Arial, sans-serif; font-size: 14px; fill: #000000;">CH<tspan style="font-size: 9px;">₂</tspan></text>
+<text x="350.0" y="125.6" text-anchor="middle" style="font-family: Arial, sans-serif; font-size: 14px; fill: #000000;">CH<tspan style="font-size: 9px;">₃</tspan></text>
+</svg>

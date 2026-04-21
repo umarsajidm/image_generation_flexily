@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="250" viewBox="0 0 400 250">
+<rect width="400" height="250" fill="white"/>
+<line x1="336.8" y1="94.2" x2="266.3" y2="162.3" stroke="#000000" stroke-width="2"/>
+<line x1="340.9" y1="98.5" x2="270.4" y2="166.6" stroke="#000000" stroke-width="2"/>
+<line x1="268.4" y1="164.5" x2="159.2" y2="133.2" stroke="#000000" stroke-width="2"/>
+<line x1="159.2" y1="133.2" x2="61.5" y2="105.3" stroke="#000000" stroke-width="2"/>
+<line x1="160.3" y1="129.4" x2="62.6" y2="101.4" stroke="#000000" stroke-width="2"/>
+<line x1="158.1" y1="137.1" x2="60.4" y2="109.1" stroke="#000000" stroke-width="2"/>
+<text x="350.0" y="90.2" text-anchor="middle" style="font-family: Arial, sans-serif; font-size: 14px; fill: #000000;">CH<tspan style="font-size: 9px;">₂</tspan></text>
+<text x="50.0" y="106.6" text-anchor="middle" style="font-family: Arial, sans-serif; font-size: 14px; fill: #000000;">CH</text>
+</svg>
