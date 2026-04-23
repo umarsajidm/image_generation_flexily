@@ -1,11 +1,13 @@
 """
 Pure AI SVG generator without reference images.
 """
+import re
 from typing import Optional, Tuple
 import vertexai
 from vertexai.generative_models import GenerativeModel
 from config.settings import GEMINI_MODEL, GCP_PROJECT_ID, GCP_LOCATION
 from config.prompts import PURE_GENERATION_PROMPT, DIAGRAM_TYPE_KEYWORDS
+from src.utils.svg_fixer import fix_broken_svg_attributes
 
 vertexai.init(project=GCP_PROJECT_ID, location=GCP_LOCATION)
 
@@ -101,23 +103,71 @@ class PureGenerator:
         return None
     
     def _optimize_svg(self, svg: str) -> str:
-        """Optimize SVG for web display."""
-        if 'viewBox' not in svg:
-            svg = svg.replace('<svg', '<svg viewBox="0 0 400 250"')
+        """Optimize SVG for web display with proper attributes."""
+        # Fix broken attributes from Gemini
+        svg = fix_broken_svg_attributes(svg)
         
-        if 'xmlns' not in svg:
-            svg = svg.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"')
+        target_width = 400
+        target_height = 250
+        
+        svg = re.sub(r'\s*width=["\'][^"\']*["\']', '', svg)
+        svg = re.sub(r'\s*height=["\'][^"\']*["\']', '', svg)
+        
+        if 'viewBox' not in svg:
+            svg = svg.replace('<svg', f'<svg viewBox="0 0 {target_width} {target_height}"', 1)
+        
+        svg = re.sub(
+            r'<svg([^>]*?)viewBox=',
+            f'<svg\\1width="{target_width}" height="{target_height}" viewBox=',
+            svg,
+            count=1
+        )
+        
+        if 'xmlns=' not in svg:
+            svg = svg.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"', 1)
+        
+        if '<rect' in svg:
+            svg = re.sub(
+                r'<rect([^>]*?)fill=["\']white["\']([^>]*)>',
+                r'<rect width="400" height="250"\1fill="white"\2>',
+                svg
+            )
+            svg = re.sub(
+                r'<rect fill=["\']white["\']([^>]*)>',
+                r'<rect width="400" height="250" fill="white"\1>',
+                svg
+            )
         
         return svg.strip()
     
     def _validate_svg(self, svg: str) -> Tuple[bool, list]:
-        """Validate generated SVG."""
+        """Validate generated SVG with comprehensive checks."""
         issues = []
         
-        if not svg.startswith('<svg') or not svg.endswith('</svg>'):
-            issues.append("Invalid SVG structure")
+        if not svg.startswith('<svg'):
+            issues.append("Missing <svg> opening tag")
+        if not svg.endswith('</svg>'):
+            issues.append("Missing </svg> closing tag")
         
-        if len(svg) > 15000:
+        if 'width=' not in svg:
+            issues.append("Missing width attribute")
+        if 'height=' not in svg:
+            issues.append("Missing height attribute")
+        if 'viewBox=' not in svg:
+            issues.append("Missing viewBox attribute")
+        if 'xmlns=' not in svg:
+            issues.append("Missing xmlns attribute")
+        
+        if 'fill="white"' not in svg and 'fill="White"' not in svg:
+            issues.append("Missing white background")
+        
+        if len(svg) > 25000:
             issues.append(f"SVG too large: {len(svg)} bytes")
+        
+        text_matches = re.findall(r'<text[^>]*>', svg)
+        for text_tag in text_matches:
+            if 'font-size' not in text_tag:
+                issues.append("Text element missing font-size")
+                break
         
         return len(issues) == 0, issues

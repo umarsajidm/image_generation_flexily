@@ -2,27 +2,101 @@ import streamlit as st
 from pathlib import Path
 import json
 from collections import defaultdict
+import time
+from datetime import datetime
 
 OUTPUT_DIR = Path("/root/image_generation_flexily/output/generated")
 
-st.set_page_config(page_title="MCQ Image Generation", layout="wide")
+st.set_page_config(page_title="MCQ Image Generation", layout="wide", page_icon="🎨")
 
-st.title("MCQ Image Generation Pipeline")
+# Auto-refresh every 10 seconds
+st.sidebar.markdown("""
+    <script>
+        setTimeout(function(){
+            window.location.reload(1);
+        }, 10000);
+    </script>
+""", unsafe_allow_html=True)
 
 # Sidebar with overall stats
 with st.sidebar:
-    st.header("Overall Progress")
+    st.header("📊 Live Progress")
+    st.caption(f"Last updated: {datetime.now().strftime('%H:%M:%S')}")
+    st.caption("Auto-refreshes every 10s")
     
     # Phase 3A stats
     phase3a_checkpoint = OUTPUT_DIR / "phase3a" / "checkpoint.jsonl"
     if phase3a_checkpoint.exists():
         with open(phase3a_checkpoint) as f:
             lines = [l for l in f.readlines() if l.strip()]
-        st.metric("Phase 3A Processed", len(lines))
+        
+        # Calculate stats
+        success = 0
+        failed = 0
+        total_quality = 0
+        for line in lines:
+            try:
+                data = json.loads(line)
+                if data.get('success'):
+                    success += 1
+                    total_quality += data.get('quality_score', 0)
+                else:
+                    failed += 1
+            except:
+                pass
+        
+        total = success + failed
+        progress = min(total / 340, 1.0)
+        
+        st.metric("Phase 3A Progress", f"{total}/340", f"{progress*100:.1f}%")
+        st.progress(progress)
+        st.metric("✅ Success", success)
+        st.metric("❌ Failed", failed)
+        if success > 0:
+            st.metric("📈 Avg Quality", f"{total_quality/success:.1f}")
+        
+        # Estimated time remaining
+        remaining = 340 - total
+        est_minutes = remaining * 0.5  # ~30 seconds per MCQ
+        st.metric("⏱️ Est. Time", f"{est_minutes:.0f} min")
     
     # Total SVG count
     svg_count = len(list((OUTPUT_DIR / "phase3a").glob("mcq_*.svg")))
-    st.metric("Total SVGs", svg_count)
+    st.metric("📄 SVG Files", svg_count)
+
+st.title("🎨 MCQ Image Generation Pipeline")
+
+# Status bar
+status_col1, status_col2, status_col3 = st.columns(3)
+
+with status_col1:
+    # Check if process is running
+    import subprocess
+    result = subprocess.run(['pgrep', '-f', 'process_phase3a'], capture_output=True)
+    if result.returncode == 0:
+        st.success("🟢 Phase 3A Running")
+    else:
+        st.warning("🔴 Phase 3A Stopped")
+
+with status_col2:
+    # Recent activity
+    if phase3a_checkpoint.exists():
+        import os
+        mtime = os.path.getmtime(phase3a_checkpoint)
+        age = time.time() - mtime
+        if age < 120:
+            st.info(f"⚡ Last activity: {int(age)}s ago")
+        else:
+            st.caption(f"Last activity: {int(age/60)}m ago")
+
+with status_col3:
+    # Processing rate
+    if total > 0:
+        st.metric("Success Rate", f"{100*success/total:.1f}%")
+    else:
+        st.metric("Success Rate", "N/A")
+
+st.divider()
 
 tabs = st.tabs(["Phase 3A Live", "Phase 3A Test", "Phase 3C Test"])
 
@@ -50,6 +124,26 @@ def show_responsive_svg(svg_content, max_width=600):
 def show_phase_batch(output_dir, phase_name):
     """Show results for a phase batch."""
     checkpoint_path = output_dir / "checkpoint.jsonl"
+    
+    # Live log viewer at top
+    st.subheader("📡 Live Activity")
+    log_file = Path("/root/image_generation_flexily/logs")
+    
+    # Find most recent log
+    recent_logs = sorted(log_file.glob("phase3a*.log"), key=lambda x: x.stat().st_mtime, reverse=True)
+    if recent_logs:
+        latest_log = recent_logs[0]
+        try:
+            with open(latest_log) as f:
+                lines = f.readlines()
+            # Show last 15 lines
+            recent_lines = [l.strip() for l in lines[-15:] if l.strip()]
+            if recent_lines:
+                st.code("\n".join(recent_lines), language="log")
+        except:
+            st.caption("Unable to read log file")
+    
+    st.divider()
     
     # Summary metrics
     col1, col2, col3, col4 = st.columns(4)
