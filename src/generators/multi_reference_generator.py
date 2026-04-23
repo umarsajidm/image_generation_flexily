@@ -40,6 +40,7 @@ from src.generators.python_svg_generator import PythonSVGGenerator, PythonGenRes
 from src.generators.mermaid_generator import MermaidGenerator, MermaidGenResult
 from src.generators.imagen_generator import ImagenGenerator, ImagenGenResult
 from src.generators.chemistry_molecule_generator import ChemistryMoleculeGenerator, MoleculeGenResult
+from src.utils.mechanics_router import classify_mechanics_subtype, get_subtype_confidence
 
 
 @dataclass
@@ -284,6 +285,13 @@ class MultiReferenceGenerator:
                 return svg, None
             else:
                 return None, f"Chemistry molecule generator failed: {result.error}"
+        
+        if diagram_type == DiagramType.MECHANICS:
+            subtype, confidence = get_subtype_confidence(question)
+            print(f"  Mechanics subtype: {subtype.value} (confidence: {confidence:.2f})")
+        
+        if diagram_type == DiagramType.OPTICS:
+            print(f"  Using optics few-shot prompt")
         
         supported_types = [
             DiagramType.CIRCUIT, DiagramType.GRAPH, 

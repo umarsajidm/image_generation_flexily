@@ -19,6 +19,8 @@ from google.genai import types
 from config.settings import GCP_PROJECT_ID, GCP_LOCATION
 from src.utils.diagram_classifier import DiagramType, ClassificationResult
 from src.utils.svg_validator import inject_textbook_style
+from src.utils.mechanics_router import classify_mechanics_subtype, MechanicsSubtype
+from src.generators.mechanics_prompts import build_mechanics_prompt, build_optics_prompt
 
 
 MATPLOTLIB_TEXTBOOK_SETUP = '''
@@ -436,14 +438,29 @@ class PythonSVGGenerator:
         }
         return prompts.get(diagram_type, GRAPH_PROMPT)
     
+    def _build_enhanced_mechanics_prompt(self, question: str) -> str:
+        """Build enhanced mechanics prompt with few-shot code example."""
+        subtype = classify_mechanics_subtype(question)
+        return build_mechanics_prompt(question, subtype)
+    
+    def _build_enhanced_optics_prompt(self, question: str) -> str:
+        """Build enhanced optics prompt with few-shot code example."""
+        return build_optics_prompt(question)
+    
     async def generate_code(
         self,
         question: str,
         diagram_type: DiagramType,
-        classification: ClassificationResult = None
+        classification: ClassificationResult = None,
+        use_enhanced_prompts: bool = True
     ) -> Tuple[Optional[str], Optional[str]]:
-        prompt_template = self._get_prompt_template(diagram_type)
-        prompt = prompt_template.format(question=question)
+        if use_enhanced_prompts and diagram_type == DiagramType.MECHANICS:
+            prompt = self._build_enhanced_mechanics_prompt(question)
+        elif use_enhanced_prompts and diagram_type == DiagramType.OPTICS:
+            prompt = self._build_enhanced_optics_prompt(question)
+        else:
+            prompt_template = self._get_prompt_template(diagram_type)
+            prompt = prompt_template.format(question=question)
         
         try:
             response = self.client.models.generate_content(
@@ -453,9 +470,17 @@ class PythonSVGGenerator:
             
             code = response.text
             
+            code = code.replace("```python\n", "").replace("```python", "").replace("```Python\n", "").replace("```Python", "")
             code_match = re.search(r'```(?:python)?\s*([\s\S]*?)```', code)
             if code_match:
                 code = code_match.group(1).strip()
+            
+            code = code.strip()
+            if code.startswith("```"):
+                code = code[3:]
+            if code.endswith("```"):
+                code = code[:-3]
+            code = code.strip()
             
             return code, None
         except Exception as e:
@@ -477,8 +502,10 @@ class PythonSVGGenerator:
             f.write(safe_code)
         
         try:
+            venv_python = '/root/image_generation_flexily/venv/bin/python'
+            python_exe = venv_python if os.path.exists(venv_python) else 'python3'
             result = subprocess.run(
-                ['python', '-W', 'ignore', code_path],
+                [python_exe, '-W', 'ignore', code_path],
                 cwd=working_dir,
                 capture_output=True,
                 text=True,
