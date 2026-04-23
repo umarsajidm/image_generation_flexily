@@ -1,55 +1,94 @@
 # Project Progress Summary
 
-**Last Updated**: 2026-04-23 15:00 UTC
+**Last Updated**: 2026-04-23 17:00 UTC
 
 ## Current Status
 
 | Phase | Status | MCQs | Success | Rate | Quality |
 |-------|--------|------|---------|------|---------|
-| 3A | ✅ Complete | 340 | 257 | 75.4% | ~70 |
-| 3B | ✅ Complete | 86 | 81 | 94.2% | 89.0 |
+| 3A | ✅ Complete | 341 | 257 | 75.4% | 88.8 |
+| 3B | ✅ Complete | 91 | 86 | 94.5% | 88.9 |
 | 3C | ✅ Complete | 67 | 25 | 37.3% | 97.4 |
-| 3D | ⏳ Pending | 80 | - | - | - |
+| 3D-1 | ⏳ In Progress | 16 | 16 | 100% | 88.8 |
+| 3D-2 | ✅ Complete | 33 | 15 | 45.5% | 88.7 |
+| 3D-3 | ⚠️ Issues | 5 | 0 | 0% | - |
 
-**Total Progress**: 493/586 MCQs (84.1% complete)
-**Overall Success Rate**: 73.6% (363/493)
+**Total Progress**: 399/553 MCQs (72.2% complete)
+**Overall Success Rate**: 72.2% (399/553)
 
 ---
 
-## Phase 3C Results
+## Phase 3D Results
+
+### Phase 3D-1: Leftovers (137 MCQs total)
+
+**Status**: ⏳ In Progress (16/137 processed)
+
+**Approach**: Extend existing generators to all subjects
+
+**MCQ Types**: GRAPH (79), WAVES (21), CIRCUIT (16), MECHANICS (10), OPTICS (7), MOLECULE (4)
+
+**Results** (first batch):
+- 16/16 processed with 100% success
+- Biology, Chemistry, Math, None subjects covered
+- Uses MultiReferenceGenerator for most types
+- Uses ChemistryMoleculeGenerator for MOLECULE type
+
+### Phase 3D-2: ATOM Diagrams (33 MCQs)
 
 **Status**: ✅ Complete
 
-**Approach**: Library-based (RDKit) with PubChemPy
+**Approach**: Template-based generation
 
-**Key Results**:
-- 25/67 MCQs successfully generated molecular diagrams
-- 97.4 average quality (excellent)
-- 9 unique molecular structures (many questions share same molecules)
-- 42 questions need fallback (general chemistry concepts, no specific compounds)
+**Results**:
+- 15/33 (45.5%) success with 88.7 avg quality
 
-**Implementation**:
-- Installed PubChemPy for compound resolution
-- Enhanced `chemistry_molecule_generator.py` with MolDraw2D
-- Added LaTeX formula extraction (CH4, C2H4, etc.)
-- Created `scripts/process_phase3c.py` batch processor
+**Subtypes Generated**:
+| Subtype | Count | Description |
+|---------|-------|-------------|
+| periodic_melting_point | 6 | Bar charts of element melting points |
+| periodic_property | 3 | Generic periodic trend graphs |
+| periodic_ionization | 1 | Ionization energy graphs |
+| periodic_radius | 1 | Atomic radius graphs |
+| bohr_model | 1 | Electron shell diagrams |
+| nuclear_decay | 2 | Decay chain diagrams (W → X → Y → Z) |
+| orbital_shape | 1 | p-orbital dumbbell shape |
 
-**Failed Cases**:
-- Questions about general concepts (isomerism, polymerization)
-- Questions referencing "structure shown below" (need original diagram)
-- Functional groups without specific compounds
+**Failed Types** (need Gemini fallback):
+- generic_atom (11 MCQs)
+- organic_structure (2 MCQs)
+- electron_config (1 MCQ)
 
-**Next**: Remaining 42 MCQs should fallback to Gemini for generic chemistry diagrams
+### Phase 3D-3: GEOMETRY Diagrams (16 MCQs)
+
+**Status**: ⚠️ Code execution issues
+
+**Approach**: Few-shot with Gemini code generation
+
+**Issues**:
+- Python code execution failing
+- Needs debugging of exec() environment
+
+**Subtypes**:
+- charge_triangle: Equilateral triangle with charges
+- charge_square: Square with charges at corners
+- circular_motion: Circular path with velocity vectors
+- current_loop: Magnetic field diagrams
+- resistance_triangle: Resistance networks
 
 ---
 
-## Phase 3D Implementation (NEXT)
+## Remaining Work
 
-**Status**: Pending
+| Phase | MCQs | Priority | Status |
+|-------|------|----------|--------|
+| 3D-1 continue | 121 | High | In Progress |
+| 3D-3 fix | 16 | Medium | Debug needed |
+| BIOLOGY | 196 | High | Not started |
+| GENERAL | 144 | High | Not started |
+| APPARATUS | 2 | Low | Not started |
 
-**Scope**: Atom (31), Apparatus (2), General (47) = 80 MCQs
-
-**To proceed**: Say **"proceed with Phase 3D implementation"**
+**Total Remaining**: ~479 MCQs
 
 ---
 
@@ -57,11 +96,11 @@
 
 ```
 docs/
-├── RESUME.md                          # This file - quick progress reference
+├── RESUME.md                          # This file
 ├── PHASE3_SUMMARY_REPORT.md           # Detailed phase analysis
 ├── PROGRESS.md                        # Progress tracker
-├── phase3b_implementation_plan.md     # Phase 3B plan (completed)
-├── phase3c_implementation_plan.md     # Phase 3C plan (completed)
+├── phase3b_implementation_plan.md     # Phase 3B plan
+├── phase3c_implementation_plan.md     # Phase 3C plan
 └── mechanics_prompts_reference.md     # Few-shot code examples
 ```
 
@@ -70,84 +109,71 @@ docs/
 ## Output Locations
 
 ```bash
-# Phase 3A (Graph/Circuit/Waves - 340 MCQs)
+# Phase 3A
 ls /root/image_generation_flexily/output/generated/phase3a/
 
-# Phase 3B (Mechanics/Optics - 86 MCQs)
+# Phase 3B
 ls /root/image_generation_flexily/output/generated/phase3b/
 
-# Phase 3C (Chemistry Molecules - 67 MCQs)
+# Phase 3C
 ls /root/image_generation_flexily/output/generated/phase3c/
+
+# Phase 3D
+ls /root/image_generation_flexily/output/generated/phase3d1/
+ls /root/image_generation_flexily/output/generated/phase3d2/
+ls /root/image_generation_flexily/output/generated/phase3d3/
 ```
 
 ---
 
 ## Strategy Comparison
 
-| Aspect | Phase 3A | Phase 3B | Phase 3C |
-|--------|----------|----------|----------|
-| **Approach** | Generic templates | Few-shot hybrid | Library-based |
-| **AI Involvement** | High | Medium | Low |
-| **Speed** | ~3 sec/MCQ | ~3 sec/MCQ | ~0.1 sec/MCQ |
-| **Few-shot** | No | Yes (9) | No |
-| **Determinism** | Low | Medium | High |
-| **Success** | 75.4% | 94.2% | 37.3%* |
-
-*Phase 3C success limited by question types (many general concepts, not specific molecules)
+| Aspect | Phase 3A | Phase 3B | Phase 3C | Phase 3D |
+|--------|----------|----------|----------|----------|
+| **Approach** | Templates | Few-shot | Library | Mixed |
+| **AI Involvement** | High | Medium | Low | Medium |
+| **Success** | 75.4% | 94.5% | 37.3% | 45-100% |
 
 ---
 
 ## Running Commands
 
-### View Results
 ```bash
-# Phase 3A HTML viewer
-open /root/image_generation_flexily/output/generated/phase3a/view_results.html
+# Run Phase 3D-1 (leftovers)
+./venv/bin/python scripts/process_phase3d1.py
 
-# Phase 3B HTML viewer
-open /root/image_generation_flexily/output/generated/phase3b/view_results.html
+# Run Phase 3D-2 (ATOM)
+./venv/bin/python scripts/process_phase3d2.py
 
-# Phase 3C HTML viewer
-open /root/image_generation_flexily/output/generated/phase3c/view_results.html
+# Run Phase 3D-3 (GEOMETRY)
+./venv/bin/python scripts/process_phase3d3.py
 ```
 
 ---
 
-## Phase 3B Results Summary
+## Key Files Created in Phase 3D
 
-**By Mechanics Subtype**:
-| Subtype | Success | Rate |
-|---------|---------|------|
-| Generic | 48/49 | 98% |
-| Pendulum | 9/9 | 100% |
-| Collision | 4/4 | 100% |
-| Spring | 3/3 | 100% |
-| Pulley | 1/1 | 100% |
-| Torque | 13/15 | 87% |
-| Projectile | 0/2 | 0% |
+```
+scripts/
+├── process_phase3d1.py    # Leftovers processor
+├── process_phase3d2.py    # ATOM processor
+└── process_phase3d3.py    # GEOMETRY processor
 
-**Failed**: 5 MCQs (2 projectile, 2 torque, 1 generic) - all XML parse errors
-
----
-
-## Phase 3C Results Summary
-
-**Molecules Generated**: 9 unique structures (toluene, benzene, ethanol, phenol, acetophenone, pentene, trimethylpentane, isobutyl alcohol, benzyl alcohol)
-
-**Failed Types**:
-- General concepts (isomerism, polymerization) - 20 MCQs
-- Questions referencing "structure shown below" - 15 MCQs
-- Functional groups without specific compounds - 7 MCQs
-
-**Recommendation**: Remaining 42 MCQs should fallback to Gemini for generic chemistry diagrams
+src/generators/
+├── atom_generator.py      # Periodic trends, Bohr models, decay chains
+└── geometry_generator.py  # Few-shot geometry prompts
+```
 
 ---
 
 ## Next Steps
 
-1. Say **"proceed with Phase 3D implementation"** for Atom/Apparatus/General MCQs
-2. Or implement fallback mechanism for Phase 3C failed MCQs
+1. **Fix Phase 3D-3**: Debug Python code execution for GEOMETRY
+2. **Continue Phase 3D-1**: Process remaining 121 MCQs
+3. **Implement BIOLOGY**: Gemini + anatomy few-shot (196 MCQs)
+4. **Implement GENERAL**: Smart router for misc questions (144 MCQs)
+5. **Implement APPARATUS**: Lab equipment templates (2 MCQs)
 
 ---
 
-*Ready for session compact*
+*Ready for session continuation*
