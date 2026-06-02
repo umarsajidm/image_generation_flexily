@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="400" height="250" viewBox="0 0 400 250">
-<rect width="400" height="250" fill="white"/>
-<line x1="64.9" y1="163.1" x2="191.1" y2="90.3" stroke="#000000" stroke-width="2"/>
-<line x1="61.9" y1="158.0" x2="188.1" y2="85.1" stroke="#000000" stroke-width="2"/>
-<line x1="210.4" y1="87.7" x2="339.6" y2="162.3" stroke="#000000" stroke-width="2"/>
-<text x="50.0" y="173.0" text-anchor="middle" style="font-family: Arial, sans-serif; font-size: 14px; fill: #000000;">CH<tspan style="font-size: 9px;">₂</tspan></text>
-<text x="200.0" y="86.4" text-anchor="middle" style="font-family: Arial, sans-serif; font-size: 14px; fill: #000000;">CH</text>
-<text x="350.0" y="173.0" text-anchor="middle" style="font-family: Arial, sans-serif; font-size: 14px; fill: #000000;">Cl</text>
-</svg>
